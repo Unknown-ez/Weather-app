@@ -9,7 +9,7 @@ class WeatherApp(QWidget):
         super().__init__()
         self.city_label = QLabel("Enter City Name: ", self)
         self.city_input = QLineEdit(self)
-        self.get_weather_button = QPushButton(self)
+        self.get_weather_button = QPushButton("Get Weather", self)
         self.temp_label = QLabel(self)
         self.emoji_label = QLabel(self)
         self.description_label = QLabel(self)
@@ -75,7 +75,11 @@ class WeatherApp(QWidget):
         
         api_key = "da9fb65036da8799fe4f04818d5d9a75"
         city = self.city_input.text()
-        url = f"https://api.openweathermap.org/data/2.5/weather?q={city}&appid={api_key}"
+        url = "https://api.openweathermap.org/data/2.5/weather?q={city}&appid={api_key}"
+
+        response = requests.geMainit(url)
+
+        print(response)
 
     def display_error(self, message):
         pass
