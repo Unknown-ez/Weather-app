@@ -75,11 +75,41 @@ class WeatherApp(QWidget):
         
         api_key = "da9fb65036da8799fe4f04818d5d9a75"
         city = self.city_input.text()
-        url = "https://api.openweathermap.org/data/2.5/weather?q={city}&appid={api_key}"
+        url = f"https://api.openweathermap.org/data/2.5/weather?q={city}&appid={api_key}"
+ 
+    try:
+        response = requests.get(url=url)
+        response.raise_for_status()
+        data = response.json()
 
-        response = requests.geMainit(url)
+        if data.get("cod") == 200:
+            self.display_weather(data)
+        else:
+            self.display_error(data)
 
-        print(response)
+    except requests.exceptions.HTTPError as http_error:
+        match response.status_code:
+            case 400:
+                print("Bad Request — Please check your input.")
+            case 401:
+                print("Unauthorized — Invalid API key.")
+            case 403:
+                print("Forbidden — Access denied.")
+            case 404:
+                print("Not Found — City not found.")
+            case 500:
+                print("Internal Server Error — Please try again later.")
+            case 502:
+                print("Bad Gateway — Invalid response from the server.")
+            case 503:
+                print("Service Unavailable — Server is down.")
+            case 504:
+                print("Gateway Timeout — No response from the server.")
+            case _:
+                print(f"HTTP Error: {http_error}")
+
+    except requests.exceptions.RequestException:
+                pass
 
     def display_error(self, message):
         pass
